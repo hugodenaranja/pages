@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>INSIDER SIGNALS TERMINAL</title><meta property="og:type" content="website"><meta property="og:url" content="https://hugodenaranja.github.io/pages/inssig_10-04-26"><meta property="og:title" content="INSIDER SIGNALS TERMINAL"><meta property="og:description" content="INSIDER SIGNALS TERMINAL"><meta property="og:image" content="https://i.ibb.co/8Ld2qD60/screenshot.png"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="INSIDER SIGNALS TERMINAL"><meta name="twitter:image" content="https://i.ibb.co/8Ld2qD60/screenshot.png">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--P0:#080700;--P1:#110e00;--P2:#181300;--P3:#211900;--P4:#2c2200;--P5:#3a2e00;
+--A0:#ff9800;--A1:#ffb700;--A2:#ffd060;--AD:rgba(255,190,0,.92);--AF:rgba(255,170,0,.60);
+--GR:#00ff88;--RD:#ff5050;--BL:#00c8ff;--PU:#cc88ff;
+--glow-sm:0 0 7px rgba(255,152,0,.55);--glow-md:0 0 14px rgba(255,152,0,.45),0 0 28px rgba(255,152,0,.18);
+--f-disp:'VT323','Courier New',monospace;--f-ui:'IBM Plex Mono','Courier New',monospace;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f-ui);font-size:14px;color:var(--A0);background:var(--P0);min-height:100dvh;line-height:1.6;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px);pointer-events:none;z-index:9999}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.48) 100%);pointer-events:none;z-index:9998}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes glowPulse{0%,100%{text-shadow:0 0 8px rgba(255,152,0,.7)}50%{text-shadow:0 0 18px rgba(255,200,0,1),0 0 36px rgba(255,152,0,.4)}}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes scrollLeft{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.blink{animation:blink 1s step-end infinite}
+::-webkit-scrollbar{width:5px;background:var(--P1)}::-webkit-scrollbar-thumb{background:var(--P5)}
+.wrap{max-width:1480px;margin:0 auto;padding:1rem 1.5rem}
+.hdr{border:1px solid var(--P5);border-bottom:2px solid var(--A0);background:var(--P1);padding:.75rem 1.25rem;margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;box-shadow:var(--glow-sm)}
+.hdr-logo{display:flex;align-items:center;gap:.75rem}
+.logo-box{width:48px;height:48px;border:1px solid var(--A0);background:var(--P2);display:flex;align-items:center;justify-content:center;box-shadow:var(--glow-sm);flex-shrink:0}
+.hdr-title{font-family:var(--f-disp);font-size:34px;color:var(--A1);text-shadow:var(--glow-md);letter-spacing:.06em;line-height:1}
+.hdr-sub{font-size:12px;color:var(--AD);letter-spacing:.03em;text-transform:uppercase;margin-top:3px;font-weight:500}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--GR);letter-spacing:.03em;border:1px solid rgba(0,255,136,.3);padding:2px .75rem;background:rgba(0,255,136,.05)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--GR);box-shadow:0 0 6px var(--GR);animation:blink 1.5s ease-in-out infinite}
+.ts{font-size:12px;color:var(--AD)}
+.boot{font-size:13px;color:var(--AD);letter-spacing:.03em;padding:.5rem 0;border-bottom:1px dashed var(--P5);margin-bottom:.75rem;display:flex;gap:1rem;flex-wrap:wrap;font-weight:500}
+.boot span{opacity:0;animation:fadeIn .3s ease forwards}
+.boot span:nth-child(1){animation-delay:.1s}.boot span:nth-child(2){animation-delay:.4s}.boot span:nth-child(3){animation-delay:.7s}.boot span:nth-child(4){animation-delay:1s}.boot span:nth-child(5){animation-delay:1.3s}
+.ticker-bar{overflow:hidden;background:var(--P1);border:1px solid var(--P5);border-top:1px solid var(--A0);padding:5px 0;margin-bottom:1rem}
+.ticker-inner{display:flex;gap:2rem;white-space:nowrap;animation:scrollLeft 35s linear infinite;padding:0 1rem}
+.tick-item{font-size:13px;color:var(--A0);letter-spacing:.02em}
+.tick-item .sym{color:var(--A1);margin-right:6px;font-weight:600}
+.tup{color:var(--GR)}.tdn{color:var(--RD)}
+.sec-label{font-size:12px;color:var(--A0);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem;font-weight:600}
+.sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--P5),transparent)}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin-bottom:1rem}
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(3,1fr)}}
+.kpi{background:var(--P1);border:1px solid var(--P5);padding:.75rem 1rem;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi::after{content:'▪';position:absolute;bottom:4px;right:6px;font-size:9px;color:var(--P5)}
+.kpi.ku::before{background:var(--A1)}.kpi.kup::before{background:var(--GR)}.kpi.kdn::before{background:var(--RD)}.kpi.kg::before{background:var(--A2)}.kpi.kv::before{background:var(--PU)}
+.kpi-lbl{font-size:11px;color:var(--AD);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem;font-weight:600}
+.kpi-val{font-family:var(--f-disp);font-size:38px;line-height:1;color:var(--A1);text-shadow:var(--glow-md)}
+.kpi.kup .kpi-val{color:var(--GR)}.kpi.kdn .kpi-val{color:var(--RD)}.kpi.kg .kpi-val{color:var(--A2)}.kpi.kv .kpi-val{color:var(--PU)}
+.kpi-chg{font-size:12px;margin-top:.25rem;font-weight:500}
+.up{color:var(--GR)}.dn{color:var(--RD)}.neu{color:var(--AD)}
+.panel{background:var(--P1);border:1px solid var(--P5);padding:1rem 1.25rem;position:relative;margin-bottom:1rem}
+.panel::before{content:'+';position:absolute;top:-1px;left:3px;font-size:10px;color:var(--P5);line-height:1}
+.panel::after{content:'+';position:absolute;bottom:-1px;right:3px;font-size:10px;color:var(--P5);line-height:1}
+.ph{position:relative;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid var(--P4)}
+.pt{font-size:13px;color:var(--A1);letter-spacing:.04em;text-transform:uppercase;text-shadow:var(--glow-sm);display:flex;align-items:center;gap:.5rem;font-weight:600}
+.pbadge{font-size:11px;padding:1px 7px;border:1px solid var(--A0);color:var(--A0);background:rgba(255,152,0,.06);letter-spacing:.02em;font-weight:500}
+.cw{position:relative;width:100%;background:var(--P1)}
+.cw.h500{height:500px}.cw.h400{height:400px}.cw.h340{height:340px}.cw.h260{height:260px}.cw.h220{height:220px}
+.cw canvas{width:100%!important;height:100%!important;display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.ftbl{width:100%;border-collapse:collapse;font-size:13px}
+.ftbl th{text-align:left;padding:3px .75rem;color:var(--A1);letter-spacing:.04em;text-transform:uppercase;border-bottom:1px dashed var(--P5);font-size:11px;font-weight:600}
+.ftbl td{padding:.5rem .75rem;border-bottom:1px solid var(--P3);color:var(--A0)}
+.ftbl tr:last-child td{border-bottom:none}.ftbl tr:hover td{background:var(--P2)}
+.tr{text-align:right}.tdg{color:var(--GR)!important}.tdr{color:var(--RD)!important}.tda{color:var(--A1)!important}
+.sb{font-size:11px;padding:1px 7px;letter-spacing:.02em;text-transform:uppercase;border:1px solid;font-weight:600;display:inline-block}
+.sb.buy{color:var(--GR);border-color:rgba(0,255,136,.35);background:rgba(0,255,136,.07)}
+.sb.sell{color:var(--RD);border-color:rgba(255,80,80,.35);background:rgba(255,80,80,.07)}
+.sb.neu{color:var(--AD);border-color:var(--P5);background:var(--P2)}
+.brush-hint{font-size:11px;color:var(--AF);letter-spacing:.03em}
+.ftr{border-top:1px solid var(--P5);margin-top:1.5rem;padding:1rem 0 2rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.ftr-l,.ftr-r{font-size:11px;color:var(--AF);letter-spacing:.04em}
+.ftr-r{max-width:500px;text-align:right;line-height:1.7}
+</style>
+</head>
+<body class="screen"><div class="wrap">
+<header class="hdr">
+  <div class="hdr-logo">
+    <div class="logo-box">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <circle cx="18" cy="18" r="5" fill="#ffb700"/>
+        <circle cx="18" cy="18" r="10" stroke="#ffb700" stroke-width="1" stroke-opacity=".5" fill="none"/>
+        <circle cx="18" cy="18" r="15" stroke="#ffb700" stroke-width="0.8" stroke-opacity=".25" fill="none" stroke-dasharray="3 2"/>
+        <line x1="3" y1="18" x2="33" y2="18" stroke="#ffb700" stroke-width=".7" stroke-opacity=".35"/>
+        <line x1="18" y1="3" x2="18" y2="33" stroke="#ffb700" stroke-width=".7" stroke-opacity=".35"/>
+      </svg>
+    </div>
+    <div>
+      <div class="hdr-title">INSIDER SIGNALS TERMINAL</div>
+      <div class="hdr-sub">S&P 500 · INSIDER BUY/SELL ANALYTICS · OPENINSIDER / YAHOO FINANCE</div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <div class="live-badge"><span class="dot"></span>SYS LIVE</div>
+      <div class="ts" id="ts">──</div>
+    </div>
+  </div>
+</header>
+<div class="boot"><span>■ SYSTEM READY</span><span>■ FEED: OPENINSIDER + YAHOO FINANCE</span><span>■ SPX: 6,783</span><span>■ P/S 10D: 0.39</span><span>■ INSIDER SCORE: -1<span class="blink">_</span></span></div>
+<div class="ticker-bar"><div class="ticker-inner"><span class="tick-item"><span class="sym">^GSPC</span>6,783 <span class="tup">▲+36.1%</span></span><span class="tick-item"><span class="sym">P/S 10D</span>0.39 <span class="tdn">── NEUTRAL</span></span><span class="tick-item"><span class="sym">SCORE</span>-1 <span class="tdn">▼ SELL</span></span><span class="tick-item"><span class="sym">ATH DD</span>-2.8% <span class="tdn">▼ DRAWDOWN</span></span><span class="tick-item"><span class="sym">BUY SIG</span>0 <span class="tup">▲ TOTAL</span></span><span class="tick-item"><span class="sym">^GSPC</span>6,783 <span class="tup">▲+36.1%</span></span><span class="tick-item"><span class="sym">P/S 10D</span>0.39 <span class="tdn">── NEUTRAL</span></span><span class="tick-item"><span class="sym">SCORE</span>-1 <span class="tdn">▼ SELL</span></span><span class="tick-item"><span class="sym">ATH DD</span>-2.8% <span class="tdn">▼ DRAWDOWN</span></span><span class="tick-item"><span class="sym">BUY SIG</span>0 <span class="tup">▲ TOTAL</span></span></div></div>
+
+<div class="sec-label">[ MARKET SNAPSHOT · DATA AS OF 08 APR 2026 ]</div>
+<div class="kpi-row">
+  <div class="kpi ku">
+    <div class="kpi-lbl">▸ SPX CLOSE</div>
+    <div class="kpi-val">6,783</div>
+    <div class="kpi-chg up">▲ +36.1% 1Y</div>
+  </div>
+  <div class="kpi kup">
+    <div class="kpi-lbl">▸ 1Y CHANGE</div>
+    <div class="kpi-val">+36.1%</div>
+    <div class="kpi-chg up">▲ 4,983 → 6,783</div>
+  </div>
+  <div class="kpi kdn">
+    <div class="kpi-lbl">▸ ATH DRAWDOWN</div>
+    <div class="kpi-val">-2.8%</div>
+    <div class="kpi-chg dn">▼ FROM ATH 6,979</div>
+  </div>
+  <div class="kpi kg">
+    <div class="kpi-lbl">▸ P/S RATIO 10D</div>
+    <div class="kpi-val">0.39</div>
+    <div class="kpi-chg neu">── NEUTRAL · MED 0.34</div>
+  </div>
+  <div class="kpi kdn">
+    <div class="kpi-lbl">▸ INSIDER SCORE</div>
+    <div class="kpi-val">-1</div>
+    <div class="kpi-chg neu">RANGE [-4 … +4]</div>
+  </div>
+</div>
+<div class="sec-label">[ S&P 500 PRICE + INSIDER SIGNALS ]</div>
+<div class="panel">
+  <div class="ph">
+    <div class="pt">▸ SPX CLOSE + MA50/MA200 <span class="pbadge">INSIDER MARKERS</span></div>
+    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+      <span class="pbadge" style="color:#ffd060;border-color:#ffd060">★ CRISIS BOTTOM</span>
+      <span class="pbadge" style="color:#00ff88;border-color:#00ff88">▲ REGIME SHIFT</span>
+      <span class="pbadge" style="color:#00c8ff;border-color:#00c8ff">● CLUSTER BUY</span>
+      <span class="pbadge" style="color:#cc88ff;border-color:#cc88ff">◆ OVERSOLD+INS</span>
+      <span class="brush-hint">⟵ drag to select</span>
+      <span id="brushRangeLabel" style="font-size:11px;color:var(--GR);font-weight:600;letter-spacing:.03em"></span>
+          </div>
+  </div>
+  <div class="cw h400"><canvas id="cSpx"></canvas></div>
+</div>
+<div class="sec-label">[ INSIDER P/S RATIO PANELS ]</div>
+<div class="panel">
+  <div class="ph"><div class="pt">▸ P/S RATIO (RAW) <span class="pbadge">DAILY</span></div><div style="font-size:11px;color:var(--AD)">── <span style="color:#ffb700;font-weight:600">MEDIAN</span> ── <span style="color:rgba(255,200,0,.6)">MEAN</span> ── <span style="color:#00e5ff">P75</span> ── <span style="color:#ff4444">P25</span>
+      </div></div>
+  <div class="cw h220"><canvas id="cPs"></canvas></div>
+</div>
+<div class="grid2">
+  <div class="panel">
+    <div class="ph"><div class="pt">▸ P/S RATIO <span class="pbadge">3-DAY AVG</span></div><div style="font-size:11px;color:var(--AD)">── <span style="color:#ffb700;font-weight:600">MEDIAN</span> ── <span style="color:rgba(255,200,0,.6)">MEAN</span> ── <span style="color:#00e5ff">P75</span> ── <span style="color:#ff4444">P25</span>
+      </div></div>
+    <div class="cw h220"><canvas id="cPs3"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><div class="pt">▸ P/S RATIO <span class="pbadge">10-DAY AVG</span></div><div style="font-size:11px;color:var(--AD)">── <span style="color:#ffb700;font-weight:600">MEDIAN</span> ── <span style="color:rgba(255,200,0,.6)">MEAN</span> ── <span style="color:#00e5ff">P75</span> ── <span style="color:#ff4444">P25</span>
+      </div></div>
+    <div class="cw h220"><canvas id="cPs10"></canvas></div>
+  </div>
+</div>
+<div class="sec-label">[ COMPOSITE INSIDER SCORE ]</div>
+<div class="panel">
+  <div class="ph">
+    <div class="pt">▸ COMPOSITE INSIDER SCORE <span class="pbadge">RANGE [-4 … +4]</span></div>
+    <div>
+      <span class="pbadge" style="color:#00ff88;border-color:#00ff88">▲ BUY PRESSURE</span>
+      <span class="pbadge" style="color:#ff5050;border-color:#ff5050;margin-left:.4rem">▼ SELL PRESSURE</span>
+          </div>
+  </div>
+  <div class="cw h220"><canvas id="cScore"></canvas></div>
+</div>
+<footer class="ftr">
+  <div class="ftr-l">INSIDER SIGNALS TERMINAL · S&P 500 · OPENINSIDER / YAHOO FINANCE</div>
+  <div class="ftr-r">FOR INFORMATIONAL PURPOSES ONLY · NOT FINANCIAL ADVICE</div>
+</footer>
+</div>
+<script>
+
+const F="'IBM Plex Mono','Courier New',monospace";
+const C={
+  a:'#ff9800', ab:'#ffb700', ah:'#ffd060',
+  gr:'#00ff88', rd:'#ff5050', bl:'#00c8ff', pu:'#cc88ff',
+  grid:'rgba(255,152,0,0.08)', tick:'rgba(255,195,0,0.92)',
+  ttBg:'#110e00', ttB:'rgba(255,152,0,0.4)'
+};
+const TT = () => ({
+  backgroundColor: C.ttBg, borderColor: C.ttB, borderWidth: 1, padding: 10,
+  titleColor: C.tick, bodyColor: C.a,
+  titleFont: {family:F, size:12, weight:'500'},
+  bodyFont:  {family:F, size:12, weight:'500'},
+  filter: function(item) { return item.dataset.label !== '_ref'; }
+});
+const TK = (sz) => ({ color: C.tick, font: {family:F, size:sz||11, weight:'500'} });
+
+(()=>{
+  const el = document.getElementById('ts');
+  if (!el) return;
+  const n = new Date();
+  const mo = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][n.getMonth()];
+  el.textContent = String(n.getDate()).padStart(2,'0')+' '+mo+' '+n.getFullYear()+
+    ' // '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+' CEST';
+})();
+
+function hline(val, color, dash, lbl) {
+  var n = 2;
+  try { n = DATES.length; } catch(e) {}
+  var label = lbl ? lbl : '_ref';
+  // Array.isArray so [] → solid, [x,y] → dashed, null/undef → default dash
+  var bd = Array.isArray(dash) ? dash : [5,4];
+  return {
+    type:'line', label: label,
+    data: Array(n).fill(val),
+    borderColor: color || 'rgba(255,152,0,0.3)',
+    borderWidth: lbl === 'MEDIAN' ? 2.5 : 1.5,
+    borderDash: bd,
+    pointRadius: 0, fill: false,
+    order: -1   // draw on TOP of data lines
+  };
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  CROSSHAIR PLUGIN
+// ═══════════════════════════════════════════════════════════════
+const crosshairPlugin = {
+  id: 'crosshair',
+  afterDraw(chart) {
+    const active = chart.tooltip._active;
+    if (!active || !active.length) return;
+    const el = active[0].element;
+    if (!el) return;
+    const ctx = chart.ctx;
+    const {top, bottom} = chart.chartArea;
+    const x = el.x;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, bottom);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(255,183,0,0.55)';
+    ctx.setLineDash([4,3]);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x, bottom, 3, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,183,0,0.8)';
+    ctx.fill();
+    ctx.restore();
+  }
+};
+Chart.register(crosshairPlugin);
+
+// ═══════════════════════════════════════════════════════════════
+//  BRUSH SELECTION PLUGIN (показывает выделение на всех графиках)
+// ═══════════════════════════════════════════════════════════════
+window._brushRange = null;  // {lo, hi} в пикселях chartArea
+
+const brushBandPlugin = {
+  id: 'brushBand',
+  afterDraw(chart) {
+    if (!window._brushRange) return;
+    // r1/r2 are normalised ratios [0..1] — identical date range on every chart
+    const {r1, r2} = window._brushRange;
+    const ca  = chart.chartArea;
+    const ctx = chart.ctx;
+    // Convert ratios → pixels for THIS chart's chartArea
+    const bxL = ca.left + Math.min(r1, r2) * (ca.right - ca.left);
+    const bxR = ca.left + Math.max(r1, r2) * (ca.right - ca.left);
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,183,0,0.10)';
+    ctx.fillRect(bxL, ca.top, bxR - bxL, ca.bottom - ca.top);
+    ctx.strokeStyle = 'rgba(255,183,0,0.7)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(bxL, ca.top); ctx.lineTo(bxL, ca.bottom);
+    ctx.moveTo(bxR, ca.top); ctx.lineTo(bxR, ca.bottom);
+    ctx.stroke();
+    const n = chart.data.labels.length;
+    if (n < 2) { ctx.restore(); return; }
+    const rL   = Math.min(r1, r2);
+    const rR   = Math.max(r1, r2);
+    const idx1 = Math.round(Math.max(0, Math.min(1, rL)) * (n - 1));
+    const idx2 = Math.round(Math.max(0, Math.min(1, rR)) * (n - 1));
+    const lbl1 = chart.data.labels[idx1] || '';
+    const lbl2 = chart.data.labels[idx2] || '';
+    const bxMid = (bxL + bxR) / 2;
+    const bandW = bxR - bxL;
+    ctx.font = "500 11px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = 'rgba(255,183,0,0.85)';
+    const w1 = ctx.measureText(lbl1).width;
+    const w2 = ctx.measureText(lbl2).width;
+    if (lbl1 === lbl2) {
+      // Single point selected
+      ctx.textAlign = 'center';
+      ctx.fillText(lbl1, bxMid, ca.top + 14);
+    } else if (bandW < w1 + w2 + 16) {
+      // Too narrow — merge into one centred label, clamped inside chartArea
+      var combined = lbl1 + ' → ' + lbl2;
+      var cw = ctx.measureText(combined).width;
+      var cx = Math.max(ca.left + cw / 2 + 4, Math.min(bxMid, ca.right - cw / 2 - 4));
+      ctx.textAlign = 'center';
+      ctx.fillText(combined, cx, ca.top + 14);
+    } else {
+      // Wide enough — labels inside band on each side
+      ctx.textAlign = 'left';  ctx.fillText(lbl1, bxL + 4, ca.top + 14);
+      ctx.textAlign = 'right'; ctx.fillText(lbl2, bxR - 4, ca.top + 14);
+    }
+    ctx.restore();
+  }
+};
+Chart.register(brushBandPlugin);
+
+// ═══════════════════════════════════════════════════════════════
+//  SYNC ENGINE
+// ═══════════════════════════════════════════════════════════════
+window._SYNC_CHARTS = [];
+
+function _initSync() {
+  var charts = window._SYNC_CHARTS;
+  if (charts.length < 2) return;
+
+  function clearAll() {
+    charts.forEach(function(c) {
+      c.tooltip.setActiveElements([], {});
+      c.update('none');
+    });
+  }
+
+  charts.forEach(function(src) {
+    src.canvas.addEventListener('mousemove', function(e) {
+      if (window._brushDragging) return;  // don't sync while selecting
+      var pts = src.getElementsAtEventForMode(e, 'index', {intersect:false}, false);
+      if (!pts.length) return;
+      var idx = pts[0].index;
+      charts.forEach(function(tgt) {
+        var actives = [];
+        tgt.data.datasets.forEach(function(ds, di) {
+          if (ds.type === 'scatter') return;
+          if (ds.label === '_ref') return;
+          if (idx < ds.data.length) actives.push({datasetIndex:di, index:idx});
+        });
+        if (actives.length) {
+          tgt.tooltip.setActiveElements(actives, {x:0,y:0});
+          tgt.update('none');
+        }
+      });
+    });
+    src.canvas.addEventListener('mouseleave', function() {
+      if (window._brushDragging) return;
+      clearAll();
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  BRUSH / ZOOM ENGINE
+// ═══════════════════════════════════════════════════════════════
+window._brushDragging = false;
+function _pixelToIndex(chart, clientX) {
+  var rect = chart.canvas.getBoundingClientRect();
+  var xPos = clientX - rect.left;
+  var ca   = chart.chartArea;
+  var n    = chart.data.labels.length;
+  if (n < 2) return 0;
+  var ratio = (xPos - ca.left) / (ca.right - ca.left);
+  ratio = Math.max(0, Math.min(1, ratio));
+  return Math.round(ratio * (n - 1));
+}
+
+function _clientXtoPixel(chart, clientX) {
+  var rect = chart.canvas.getBoundingClientRect();
+  return clientX - rect.left;
+}
+
+function _initBrush() {
+  var charts = window._SYNC_CHARTS;
+
+  charts.forEach(function(chart) {
+    var canvas = chart.canvas;
+    var startR = null;  // normalised ratio [0..1] at drag start
+
+    canvas.style.cursor = 'crosshair';
+
+    canvas.addEventListener('mousedown', function(e) {
+      if (e.button !== 0) return;
+      var rect = canvas.getBoundingClientRect();
+      var xPos = e.clientX - rect.left;
+      var ca   = chart.chartArea;
+      if (xPos < ca.left || xPos > ca.right) return;
+      startR = Math.max(0, Math.min(1, (xPos - ca.left) / (ca.right - ca.left)));
+      window._brushDragging = true;
+      window._brushRange = {r1: startR, r2: startR};
+      e.preventDefault();
+    });
+
+    canvas.addEventListener('mousemove', function(e) {
+      if (!window._brushDragging || startR === null) return;
+      var rect = canvas.getBoundingClientRect();
+      var xPos = e.clientX - rect.left;
+      var ca   = chart.chartArea;
+      var curR = Math.max(0, Math.min(1, (xPos - ca.left) / (ca.right - ca.left)));
+      window._brushRange = {r1: startR, r2: curR};
+      charts.forEach(function(c) { c.update('none'); });
+    });
+  });
+
+  // mouseup — keep band visible, just stop dragging
+  document.addEventListener('mouseup', function(e) {
+    if (!window._brushDragging) return;
+    window._brushDragging = false;
+    var br = window._brushRange;
+    if (!br) return;
+    var r1 = Math.min(br.r1, br.r2);
+    var r2 = Math.max(br.r1, br.r2);
+    // Too small → clear selection
+    if ((r2 - r1) < 0.005) {
+      window._brushRange = null;
+      charts.forEach(function(c) { c.update('none'); });
+      var lbl = document.getElementById('brushRangeLabel');
+      if (lbl) lbl.textContent = '';
+      return;
+    }
+    // Show date range label using primary chart labels
+    var primary = charts[0];
+    var n = primary.data.labels.length;
+    if (n < 2) return;
+    var lo  = Math.round(r1 * (n - 1));
+    var hi  = Math.round(r2 * (n - 1));
+    var lbl = document.getElementById('brushRangeLabel');
+    if (lbl) {
+      lbl.textContent = primary.data.labels[lo] + ' → ' + primary.data.labels[hi];
+    }
+    charts.forEach(function(c) { c.update('none'); });
+  });
+
+  // Click without drag → clear selection
+  document.addEventListener('click', function(e) {
+    if (window._brushDragging) return;
+    var onCanvas = window._SYNC_CHARTS.some(function(c) {
+      return e.target === c.canvas;
+    });
+    if (!onCanvas) return;
+    if (window._brushRange && Math.abs(window._brushRange.r2 - window._brushRange.r1) < 0.005) {
+      window._brushRange = null;
+      window._SYNC_CHARTS.forEach(function(c) { c.update('none'); });
+      var lbl = document.getElementById('brushRangeLabel');
+      if (lbl) lbl.textContent = '';
+    }
+  });
+}
+// ── Link appended inline after every chart title (.pt) ────────
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.pt').forEach(function(pt) {
+    var sep = document.createElement('span');
+    sep.textContent = '·';
+    sep.style.cssText = [
+      'color:rgba(0,255,136,0.25)',
+      'font-size:10px',
+      'margin-left:.35rem',
+      'user-select:none'
+    ].join(';');
+    var a = document.createElement('a');
+    a.href = 'https://t.me/hugodenaranja';
+    a.target = '_blank';
+    a.textContent = 't.me/hugodenaranja';
+    a.style.cssText = [
+      'font-size:10px', 'font-weight:600',
+      'color:rgba(0,255,136,0.50)',
+      'text-decoration:none',
+      'letter-spacing:.07em',
+      "font-family:'IBM Plex Mono',monospace",
+      'transition:color .2s',
+      'white-space:nowrap',
+      'text-transform:lowercase',
+      'text-shadow:none',
+      'pointer-events:auto'
+    ].join(';');
+    a.addEventListener('mouseover', function(){ this.style.color='rgba(0,255,136,1.00)'; });
+    a.addEventListener('mouseout',  function(){ this.style.color='rgba(0,255,136,0.50)'; });
+    pt.appendChild(sep);
+    pt.appendChild(a);
+  });
+});
+
+// === DATA ===
+const DATES = ["2025-01-02", "2025-01-03", "2025-01-06", "2025-01-07", "2025-01-08", "2025-01-10", "2025-01-13", "2025-01-14", "2025-01-15", "2025-01-16", "2025-01-17", "2025-01-21", "2025-01-22", "2025-01-23", "2025-01-24", "2025-01-27", "2025-01-28", "2025-01-29", "2025-01-30", "2025-01-31", "2025-02-03", "2025-02-04", "2025-02-05", "2025-02-06", "2025-02-07", "2025-02-10", "2025-02-11", "2025-02-12", "2025-02-13", "2025-02-14", "2025-02-18", "2025-02-19", "2025-02-20", "2025-02-21", "2025-02-24", "2025-02-25", "2025-02-26", "2025-02-27", "2025-02-28", "2025-03-03", "2025-03-04", "2025-03-05", "2025-03-06", "2025-03-07", "2025-03-10", "2025-03-11", "2025-03-12", "2025-03-13", "2025-03-14", "2025-03-17", "2025-03-18", "2025-03-19", "2025-03-20", "2025-03-21", "2025-03-24", "2025-03-25", "2025-03-26", "2025-03-27", "2025-03-28", "2025-03-31", "2025-04-01", "2025-04-02", "2025-04-03", "2025-04-04", "2025-04-07", "2025-04-08", "2025-04-09", "2025-04-10", "2025-04-11", "2025-04-14", "2025-04-15", "2025-04-16", "2025-04-17", "2025-04-21", "2025-04-22", "2025-04-23", "2025-04-24", "2025-04-25", "2025-04-28", "2025-04-29", "2025-04-30", "2025-05-01", "2025-05-02", "2025-05-05", "2025-05-06", "2025-05-07", "2025-05-08", "2025-05-09", "2025-05-12", "2025-05-13", "2025-05-14", "2025-05-15", "2025-05-16", "2025-05-19", "2025-05-20", "2025-05-21", "2025-05-22", "2025-05-23", "2025-05-27", "2025-05-28", "2025-05-29", "2025-05-30", "2025-06-02", "2025-06-03", "2025-06-04", "2025-06-05", "2025-06-06", "2025-06-09", "2025-06-10", "2025-06-11", "2025-06-12", "2025-06-13", "2025-06-16", "2025-06-17", "2025-06-18", "2025-06-20", "2025-06-23", "2025-06-24", "2025-06-25", "2025-06-26", "2025-06-27", "2025-06-30", "2025-07-01", "2025-07-02", "2025-07-03", "2025-07-07", "2025-07-08", "2025-07-09", "2025-07-10", "2025-07-11", "2025-07-14", "2025-07-15", "2025-07-16", "2025-07-17", "2025-07-18", "2025-07-21", "2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-28", "2025-07-29", "2025-07-30", "2025-07-31", "2025-08-01", "2025-08-04", "2025-08-05", "2025-08-06", "2025-08-07", "2025-08-08", "2025-08-11", "2025-08-12", "2025-08-13", "2025-08-14", "2025-08-15", "2025-08-18", "2025-08-19", "2025-08-20", "2025-08-21", "2025-08-22", "2025-08-25", "2025-08-26", "2025-08-27", "2025-08-28", "2025-08-29", "2025-09-02", "2025-09-03", "2025-09-04", "2025-09-05", "2025-09-08", "2025-09-09", "2025-09-10", "2025-09-11", "2025-09-12", "2025-09-15", "2025-09-16", "2025-09-17", "2025-09-18", "2025-09-19", "2025-09-22", "2025-09-23", "2025-09-24", "2025-09-25", "2025-09-26", "2025-09-29", "2025-09-30", "2025-10-01", "2025-10-02", "2025-10-03", "2025-10-06", "2025-10-07", "2025-10-08", "2025-10-09", "2025-10-10", "2025-10-14", "2025-10-15", "2025-10-16", "2025-10-17", "2025-10-20", "2025-10-21", "2025-10-22", "2025-10-23", "2025-10-24", "2025-10-27", "2025-10-28", "2025-10-29", "2025-10-30", "2025-10-31", "2025-11-03", "2025-11-04", "2025-11-05", "2025-11-06", "2025-11-07", "2025-11-10", "2025-11-12", "2025-11-13", "2025-11-14", "2025-11-17", "2025-11-18", "2025-11-19", "2025-11-20", "2025-11-21", "2025-11-24", "2025-11-25", "2025-11-26", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-16", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-27", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-06", "2026-04-07", "2026-04-08"];
+const CLOSE = [5868.55,5942.47,5975.38,5909.03,5918.25,5827.04,5836.22,5842.91,5949.91,5937.34,5996.66,6049.24,6086.37,6118.71,6101.24,6012.28,6067.7,6039.31,6071.17,6040.53,5994.57,6037.88,6061.48,6083.57,6025.99,6066.44,6068.5,6051.97,6115.07,6114.63,6129.58,6144.15,6117.52,6013.13,5983.25,5955.25,5956.06,5861.57,5954.5,5849.72,5778.15,5842.63,5738.52,5770.2,5614.56,5572.07,5599.3,5521.52,5638.94,5675.12,5614.66,5675.29,5662.89,5667.56,5767.57,5776.65,5712.2,5693.31,5580.94,5611.85,5633.07,5670.97,5396.52,5074.08,5062.25,4982.77,5456.9,5268.05,5363.36,5405.97,5396.63,5275.7,5282.7,5158.2,5287.76,5375.86,5484.77,5525.21,5528.75,5560.83,5569.06,5604.14,5686.67,5650.38,5606.91,5631.28,5663.94,5659.91,5844.19,5886.55,5892.58,5916.93,5958.38,5963.6,5940.46,5844.61,5842.01,5802.82,5921.54,5888.55,5912.17,5911.69,5935.94,5970.37,5970.81,5939.3,6000.36,6005.88,6038.81,6022.24,6045.26,5976.97,6033.11,5982.72,5980.87,5967.84,6025.17,6092.18,6092.16,6141.02,6173.07,6204.95,6198.01,6227.42,6279.35,6229.98,6225.52,6263.26,6280.46,6259.75,6268.56,6243.76,6263.7,6297.36,6296.79,6305.6,6309.62,6358.91,6363.35,6388.64,6389.77,6370.86,6362.9,6339.39,6238.01,6329.94,6299.19,6345.06,6340.0,6389.45,6373.45,6445.76,6466.58,6468.54,6449.8,6449.15,6411.37,6395.78,6370.17,6466.91,6439.32,6465.94,6481.4,6501.86,6460.26,6415.54,6448.26,6502.08,6481.5,6495.15,6512.61,6532.04,6587.47,6584.29,6615.28,6606.76,6600.35,6631.96,6664.36,6693.75,6656.92,6637.97,6604.72,6643.7,6661.21,6688.46,6711.2,6715.35,6715.79,6740.28,6714.59,6753.72,6735.11,6552.51,6644.31,6671.06,6629.07,6664.01,6735.13,6735.35,6699.4,6738.44,6791.69,6875.16,6890.89,6890.59,6822.34,6840.2,6851.97,6771.55,6796.29,6720.32,6728.8,6832.43,6850.92,6737.49,6734.11,6672.41,6617.32,6642.16,6538.76,6602.99,6705.12,6765.88,6812.61,6849.09,6812.63,6829.37,6849.72,6857.12,6870.4,6846.51,6840.51,6886.68,6901.0,6827.41,6816.51,6800.26,6721.43,6774.76,6834.5,6878.49,6909.79,6905.74,6896.24,6845.5,6858.47,6902.05,6944.82,6920.93,6921.46,6966.28,6977.27,6963.74,6926.6,6944.47,6940.01,6796.86,6875.62,6913.35,6915.61,6950.23,6978.6,6978.03,6969.01,6939.03,6976.44,6917.81,6882.72,6798.4,6932.3,6964.82,6941.81,6941.47,6832.76,6836.17,6843.22,6881.31,6861.89,6909.51,6837.75,6890.07,6946.13,6908.86,6878.88,6881.62,6816.63,6869.5,6830.71,6740.02,6795.99,6781.48,6775.8,6672.62,6632.19,6699.38,6716.09,6624.7,6606.49,6506.48,6581.0,6556.37,6591.9,6477.16,6368.85,6343.72,6528.52,6575.32,6582.69,6611.83,6616.85,6782.81];
+const MA50  = [5942.76,5944.59,5948.15,5950.13,5952.33,5952.4,5952.47,5953.05,5957.94,5962.11,5967.79,5973.12,5976.27,5979.18,5981.3,5981.51,5983.19,5984.27,5986.71,5990.11,5992.12,5994.54,5997.43,6000.13,6001.26,6002.84,6003.78,6004.84,6006.5,6007.85,6009.44,6010.59,6011.44,6009.9,6008.51,6006.91,6004.35,6000.56,5998.63,5994.14,5988.69,5988.1,5985.53,5982.31,5975.12,5965.77,5957.0,5948.01,5942.65,5938.52,5933.45,5928.1,5921.85,5917.02,5914.01,5913.0,5910.52,5907.53,5900.15,5893.64,5886.37,5878.8,5865.01,5844.11,5823.33,5802.74,5790.53,5775.1,5760.95,5748.25,5736.3,5721.05,5705.48,5686.97,5672.2,5658.39,5646.72,5636.18,5624.46,5613.38,5602.17,5591.37,5582.75,5575.5,5567.97,5561.49,5555.65,5551.62,5549.41,5550.15,5552.43,5553.92,5558.32,5562.19,5568.7,5574.15,5579.01,5584.64,5590.29,5594.56,5600.51,5605.23,5610.69,5616.75,5620.82,5624.07,5629.83,5636.08,5645.24,5653.45,5661.69,5667.81,5680.54,5698.72,5717.09,5736.79,5748.16,5764.64,5779.21,5793.92,5809.44,5828.03,5846.34,5867.72,5887.55,5904.63,5919.45,5934.21,5949.24,5963.22,5977.21,5990.01,6001.55,6014.49,6028.28,6041.77,6054.68,6068.66,6079.05,6089.09,6099.03,6108.11,6116.2,6123.72,6129.67,6139.37,6148.52,6159.36,6167.73,6177.75,6186.98,6197.66,6208.27,6218.23,6227.81,6238.01,6246.23,6254.03,6260.66,6269.55,6277.43,6287.21,6296.18,6306.56,6316.15,6325.1,6333.56,6341.76,6349.55,6356.63,6363.42,6369.96,6377.75,6384.89,6391.61,6399.14,6406.64,6414.01,6421.69,6430.37,6438.14,6446.02,6452.84,6459.77,6467.06,6474.72,6482.75,6489.88,6496.92,6503.96,6510.45,6518.11,6525.55,6529.82,6544.44,6551.88,6557.56,6564.04,6570.95,6578.19,6583.26,6588.7,6595.16,6603.67,6612.5,6622.09,6630.62,6640.02,6647.72,6654.37,6660.97,6665.75,6670.29,6677.73,6694.41,6699.12,6704.17,6707.71,6709.81,6712.01,6711.04,6711.41,6713.21,6716.39,6720.63,6724.98,6727.94,6730.65,6734.51,6738.89,6744.21,6748.26,6751.85,6755.81,6759.61,6761.85,6763.87,6765.06,6765.2,6765.62,6767.61,6774.13,6779.23,6795.7,6800.34,6802.55,6805.01,6809.06,6813.19,6815.78,6816.7,6818.21,6819.94,6822.77,6824.5,6826.35,6829.72,6829.73,6832.84,6836.53,6838.19,6840.26,6842.82,6847.63,6852.33,6857.66,6864.84,6870.35,6877.23,6881.14,6885.68,6889.66,6892.25,6894.1,6894.5,6894.63,6894.5,6894.99,6894.82,6896.08,6896.02,6896.09,6896.99,6898.62,6899.87,6901.5,6903.4,6905.3,6905.22,6902.45,6900.17,6897.16,6894.08,6889.42,6884.14,6881.21,6878.37,6872.82,6866.05,6857.76,6850.95,6842.76,6835.05,6825.32,6814.16,6802.15,6793.92,6789.49,6783.63,6777.6,6771.62,6768.27];
+const MA200 = [5555.21,5559.03,5562.78,5566.12,5569.54,5572.59,5575.75,5578.72,5582.2,5585.67,5589.62,5593.81,5598.51,5603.08,5607.57,5611.58,5616.12,5620.32,5625.06,5629.95,5634.67,5639.75,5645.0,5650.58,5655.66,5660.64,5665.62,5670.64,5675.72,5680.71,5686.18,5691.81,5697.07,5701.5,5705.51,5709.35,5713.19,5716.43,5720.09,5723.23,5725.89,5728.56,5730.77,5733.1,5734.63,5735.89,5737.35,5738.62,5740.29,5742.13,5743.87,5746.07,5748.0,5749.92,5752.3,5754.41,5756.21,5757.94,5759.04,5760.22,5761.28,5762.47,5762.29,5760.3,5758.17,5755.72,5755.68,5754.79,5754.26,5753.9,5753.46,5752.54,5751.58,5749.82,5748.58,5747.62,5747.18,5746.92,5746.4,5746.28,5746.05,5745.91,5746.01,5746.32,5746.63,5747.26,5747.76,5748.28,5750.37,5752.8,5754.97,5757.24,5759.85,5762.05,5764.52,5767.01,5770.29,5773.1,5776.71,5779.56,5782.4,5785.24,5787.75,5790.32,5792.46,5794.38,5796.34,5798.39,5800.48,5802.74,5804.79,5806.59,5808.63,5810.58,5812.52,5814.12,5816.6,5819.46,5822.41,5826.07,5829.58,5833.13,5836.35,5839.5,5842.77,5845.76,5848.71,5851.94,5854.77,5857.56,5860.31,5862.86,5865.57,5868.33,5871.12,5873.84,5876.84,5880.09,5883.4,5886.59,5890.06,5893.16,5896.01,5898.81,5900.93,5903.28,5905.7,5908.21,5910.7,5913.32,5915.92,5918.89,5922.24,5925.53,5928.74,5931.87,5934.76,5937.67,5941.0,5944.69,5948.32,5951.74,5954.5,5957.14,5959.47,5961.54,5963.86,5966.44,5969.1,5972.23,5975.32,5978.4,5981.75,5984.93,5988.16,5991.25,5994.15,5997.31,6000.47,6003.71,6006.74,6009.5,6012.15,6014.91,6017.95,6021.22,6024.36,6027.68,6031.0,6034.33,6037.65,6042.06,6046.4,6049.51,6055.93,6059.1,6062.39,6066.18,6070.44,6074.78,6078.56,6082.38,6086.79,6091.58,6096.9,6102.17,6107.06,6111.52,6116.09,6119.96,6123.7,6126.87,6129.92,6133.58,6141.66,6145.15,6148.47,6151.63,6154.74,6157.76,6160.15,6162.75,6166.14,6169.64,6173.36,6177.35,6180.83,6184.41,6188.01,6191.57,6195.34,6199.5,6203.79,6208.45,6213.17,6218.0,6222.31,6227.06,6231.78,6236.44,6241.92,6247.46,6253.94,6274.31,6280.6,6286.45,6292.67,6298.8,6305.21,6311.48,6317.25,6323.2,6329.52,6335.88,6342.6,6349.27,6355.8,6361.43,6368.83,6378.02,6387.29,6397.13,6404.74,6413.29,6421.31,6428.98,6436.88,6445.09,6453.09,6461.29,6469.51,6477.46,6484.74,6491.82,6498.34,6504.72,6511.09,6517.48,6523.35,6529.65,6535.8,6542.1,6548.51,6554.75,6559.93,6564.9,6569.52,6574.28,6578.65,6582.53,6586.81,6591.49,6596.16,6600.51,6604.06,6608.12,6612.14,6615.7,6619.05,6621.73,6624.78,6627.87,6630.83,6633.18,6634.83,6636.44,6638.86,6641.85,6644.6,6647.74,6650.92,6655.0];
+const PS_RAW  = [0.646,0.232,0.172,0.111,0.183,0.27,0.5,0.288,0.38,0.391,0.213,0.173,0.314,0.174,0.299,0.363,0.394,0.198,0.45,0.354,0.35,0.212,0.127,0.242,0.295,0.706,0.187,0.201,0.204,0.257,0.267,0.201,0.159,0.197,0.31,0.306,0.283,0.305,0.296,0.521,0.19,0.229,0.364,0.313,0.551,0.383,0.341,0.684,0.429,0.609,0.34,0.206,0.338,0.265,0.539,0.448,0.226,0.614,0.611,0.709,0.795,0.471,0.174,0.3,0.877,0.761,0.741,0.951,0.841,0.653,0.638,0.382,0.396,0.543,0.81,0.551,0.717,0.712,1.261,0.78,0.565,0.56,0.486,0.285,0.416,0.397,0.756,0.413,0.637,0.413,0.349,0.41,0.287,0.418,0.341,0.358,0.325,0.466,0.731,0.494,0.3,0.361,0.493,0.328,0.216,0.218,0.32,0.368,0.294,0.241,0.263,0.339,0.603,0.303,0.226,0.232,0.406,0.246,0.286,0.229,0.356,0.357,0.564,0.261,0.134,0.287,0.12,0.224,0.111,0.141,0.571,0.388,0.163,0.321,0.275,0.369,0.209,0.167,0.415,0.356,0.391,0.404,0.352,0.409,0.596,0.372,0.327,0.258,0.574,0.363,0.763,0.471,0.497,0.373,0.307,0.33,0.279,0.255,0.397,0.254,0.376,0.285,0.289,0.359,0.217,0.325,0.224,0.137,0.244,0.261,0.268,0.228,0.234,0.258,0.34,0.222,0.176,0.357,0.26,0.302,0.274,0.149,0.464,0.207,0.382,0.588,0.457,0.189,0.109,0.269,0.181,0.098,0.469,0.083,0.49,0.157,0.276,0.233,0.333,0.435,0.305,0.393,0.322,0.567,0.351,0.413,0.44,0.297,0.59,0.373,0.278,0.479,0.31,0.669,0.372,0.321,0.382,0.686,0.472,0.436,0.525,0.445,0.562,0.515,0.281,0.438,0.465,0.3,0.266,0.253,0.295,0.436,0.317,0.267,0.376,0.221,0.378,0.335,0.213,0.372,0.336,0.583,0.275,0.4,0.435,0.382,0.637,0.274,0.139,0.261,0.119,0.266,0.552,0.261,0.267,0.27,0.25,0.364,0.279,0.127,0.275,0.302,0.621,0.373,0.362,0.582,0.344,0.236,0.16,0.385,0.258,0.467,0.231,0.242,0.248,0.356,0.251,0.223,0.135,0.207,0.215,0.233,0.234,0.197,0.311,0.4,0.249,0.231,0.237,0.25,0.466,0.346,0.53,0.382,0.398,0.473,0.328,0.287,0.225,0.288,0.812,0.309,0.373,0.246,0.473,0.685,0.435,0.911,0.25,0.311,0.353,0.181];
+const PS_MA3  = [0.486,0.448,0.404,0.342,0.269,0.194,0.247,0.271,0.324,0.366,0.354,0.289,0.294,0.253,0.235,0.265,0.309,0.286,0.341,0.352,0.349,0.313,0.299,0.257,0.245,0.316,0.311,0.326,0.319,0.311,0.223,0.226,0.218,0.216,0.227,0.234,0.251,0.28,0.3,0.342,0.319,0.308,0.32,0.324,0.33,0.368,0.391,0.455,0.478,0.489,0.481,0.454,0.385,0.352,0.338,0.359,0.363,0.419,0.488,0.522,0.591,0.64,0.552,0.49,0.523,0.517,0.571,0.726,0.834,0.789,0.765,0.693,0.582,0.547,0.582,0.615,0.68,0.666,0.81,0.804,0.807,0.775,0.73,0.535,0.462,0.429,0.468,0.453,0.524,0.523,0.514,0.444,0.419,0.376,0.361,0.363,0.346,0.382,0.444,0.475,0.463,0.47,0.476,0.395,0.34,0.323,0.315,0.29,0.283,0.288,0.297,0.301,0.348,0.35,0.347,0.341,0.354,0.283,0.279,0.28,0.304,0.295,0.358,0.353,0.334,0.321,0.273,0.205,0.175,0.177,0.234,0.287,0.275,0.317,0.344,0.303,0.267,0.268,0.287,0.303,0.307,0.346,0.384,0.382,0.43,0.427,0.411,0.392,0.426,0.379,0.457,0.486,0.534,0.493,0.482,0.395,0.357,0.309,0.313,0.303,0.312,0.313,0.32,0.313,0.305,0.295,0.283,0.252,0.229,0.238,0.227,0.228,0.247,0.25,0.266,0.257,0.246,0.271,0.271,0.263,0.274,0.268,0.29,0.279,0.295,0.358,0.42,0.365,0.345,0.323,0.241,0.169,0.225,0.22,0.264,0.259,0.295,0.248,0.298,0.287,0.316,0.34,0.358,0.404,0.387,0.409,0.418,0.413,0.418,0.423,0.396,0.403,0.406,0.422,0.422,0.43,0.411,0.486,0.446,0.459,0.5,0.513,0.488,0.497,0.466,0.448,0.452,0.4,0.35,0.345,0.316,0.31,0.313,0.314,0.338,0.323,0.312,0.315,0.304,0.304,0.327,0.368,0.356,0.393,0.406,0.415,0.426,0.426,0.374,0.339,0.286,0.212,0.268,0.292,0.293,0.323,0.32,0.282,0.286,0.258,0.259,0.269,0.321,0.34,0.387,0.448,0.457,0.38,0.337,0.341,0.276,0.301,0.3,0.316,0.289,0.309,0.266,0.264,0.243,0.234,0.206,0.203,0.205,0.217,0.238,0.275,0.278,0.278,0.286,0.273,0.287,0.306,0.366,0.395,0.424,0.426,0.422,0.373,0.342,0.32,0.388,0.384,0.401,0.406,0.443,0.417,0.442,0.55,0.551,0.4,0.383,0.237];
+const PS_MA10 = [0.462,0.451,0.444,0.405,0.382,0.34,0.348,0.337,0.333,0.317,0.274,0.268,0.282,0.289,0.3,0.309,0.299,0.29,0.297,0.293,0.307,0.311,0.292,0.299,0.298,0.333,0.312,0.312,0.288,0.278,0.27,0.269,0.272,0.267,0.269,0.229,0.238,0.249,0.258,0.284,0.277,0.279,0.3,0.312,0.336,0.344,0.349,0.387,0.401,0.41,0.424,0.422,0.42,0.415,0.414,0.42,0.409,0.402,0.42,0.43,0.475,0.502,0.485,0.489,0.523,0.554,0.605,0.639,0.662,0.656,0.641,0.632,0.654,0.668,0.673,0.654,0.631,0.618,0.679,0.693,0.711,0.727,0.698,0.672,0.633,0.618,0.622,0.592,0.529,0.493,0.471,0.456,0.436,0.45,0.442,0.438,0.395,0.401,0.41,0.418,0.413,0.408,0.429,0.42,0.407,0.393,0.393,0.383,0.339,0.314,0.31,0.308,0.319,0.317,0.318,0.319,0.328,0.315,0.315,0.313,0.323,0.324,0.32,0.316,0.307,0.312,0.284,0.282,0.264,0.255,0.277,0.28,0.24,0.246,0.26,0.268,0.277,0.272,0.302,0.323,0.305,0.307,0.326,0.335,0.367,0.367,0.379,0.388,0.404,0.405,0.442,0.449,0.463,0.459,0.43,0.426,0.421,0.421,0.403,0.392,0.354,0.335,0.314,0.313,0.304,0.304,0.298,0.286,0.271,0.272,0.261,0.255,0.25,0.24,0.252,0.242,0.237,0.259,0.26,0.265,0.265,0.257,0.28,0.275,0.279,0.316,0.344,0.327,0.312,0.309,0.3,0.294,0.295,0.283,0.293,0.25,0.232,0.236,0.259,0.275,0.288,0.317,0.303,0.351,0.337,0.363,0.379,0.386,0.411,0.405,0.402,0.411,0.41,0.42,0.422,0.413,0.407,0.446,0.434,0.44,0.465,0.462,0.487,0.472,0.462,0.474,0.483,0.444,0.423,0.405,0.382,0.381,0.357,0.332,0.341,0.32,0.311,0.314,0.309,0.321,0.325,0.34,0.335,0.349,0.355,0.371,0.397,0.391,0.383,0.372,0.351,0.319,0.347,0.333,0.316,0.305,0.266,0.275,0.289,0.275,0.291,0.295,0.301,0.313,0.322,0.354,0.363,0.35,0.338,0.364,0.362,0.379,0.34,0.327,0.315,0.293,0.283,0.282,0.28,0.262,0.258,0.234,0.235,0.23,0.236,0.241,0.241,0.241,0.251,0.256,0.281,0.292,0.322,0.34,0.349,0.356,0.364,0.37,0.368,0.372,0.407,0.403,0.387,0.374,0.381,0.403,0.413,0.476,0.478,0.408,0.413,0.394];
+const SCORE   = [0.0,0.0,-1.0,0.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-3.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0];
+const SCORE_COLORS = ["rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050"];
+const SIG_PTS = {"sig_A": {"labels": [], "values": []}, "sig_B": {"labels": [], "values": []}, "sig_C": {"labels": [], "values": []}, "sig_D": {"labels": [], "values": []}, "sig_sell": {"labels": ["2025-06-05"], "values": [5939.3]}};
+const PS_RAW_MED=0.328, PS_RAW_MEAN=0.365, PS_RAW_P75=0.436, PS_RAW_P25=0.25;
+const PS_MA3_MED=0.34, PS_MA3_MEAN=0.366, PS_MA3_P75=0.422, PS_MA3_P25=0.287;
+const PS10_MED=0.338,   PS10_MEAN=0.366,   PS10_P75=0.412,   PS10_P25=0.293;
+
+// === CHARTS ===
+
+// ── SPX ──────────────────────────────────────────────────────────
+(function() {
+  var sigStyles = {
+    sig_A:    {label:'CRISIS BOTTOM', color:'#ffd060', r:8, shape:'star'},
+    sig_B:    {label:'REGIME SHIFT',  color:'#00ff88', r:7, shape:'triangle'},
+    sig_C:    {label:'CLUSTER BUY',   color:'#00c8ff', r:6, shape:'circle'},
+    sig_D:    {label:'OVERSOLD+INS',  color:'#cc88ff', r:6, shape:'rectRot'},
+  };
+  var sigDS = Object.keys(sigStyles).map(function(k) {
+    var st = sigStyles[k];
+    var pts = SIG_PTS[k];
+    return {
+      type: 'scatter',
+      label: st.label,
+      data: pts.labels.map(function(lbl, i) { return {x: lbl, y: pts.values[i]}; }),
+      backgroundColor: st.color,
+      borderColor: '#080700',
+      borderWidth: 1,
+      pointRadius: st.r,
+      pointStyle: st.shape,
+      order: 0
+    };
+  });
+  var datasets = [
+    {type:'line', label:'SPX CLOSE', data:CLOSE, borderColor:'#ff9800',
+     borderWidth:2, fill:false, pointRadius:0, tension:0, order:10},
+    {type:'line', label:'MA50',  data:MA50,  borderColor:'#00c8ff',
+     borderWidth:1, borderDash:[4,3], fill:false, pointRadius:0, tension:0, order:9},
+    {type:'line', label:'MA200', data:MA200, borderColor:'#ffb700',
+     borderWidth:1.2, borderDash:[6,3], fill:false, pointRadius:0, tension:0, order:9}
+  ].concat(sigDS);
+
+  window._SYNC_CHARTS.push(new Chart(document.getElementById('cSpx'), {
+    type: 'line',
+    data: { labels: DATES, datasets: datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {
+        legend: {display:true, position:'bottom',
+          labels: {color:C.tick, font:{family:F,size:11,weight:'500'}, boxWidth:10, padding:8,
+            filter: function(item) { return !item.text.startsWith('_'); }}},
+        tooltip: TT()
+      },
+      scales: {
+        x: {type:'category', grid:{color:C.grid}, ticks:{...TK(), maxTicksLimit:12, maxRotation:0}},
+        y: {grid:{color:C.grid, borderDash:[2,4]},
+            ticks:{...TK(), callback:function(v){return '$'+Math.round(v).toLocaleString();}}}
+      }
+    }
+  }));
+})();
+
+// ── P/S RAW ──────────────────────────────────────────────────────
+(function() {
+  var n = DATES.length;
+  window._SYNC_CHARTS.push(new Chart(document.getElementById('cPs'), {
+    type: 'line',
+    data: { labels: DATES, datasets: [
+      {label:'P/S RAW', data:PS_RAW, borderColor:'#00c8ff', borderWidth:1.5,
+       fill:false, pointRadius:0, tension:0.2},
+      hline(PS_RAW_MED,  'rgba(255,183,0,0.7)',  [],    'MEDIAN'),
+      hline(PS_RAW_MEAN, 'rgba(255,200,0,0.5)',  [6,4], 'MEAN'),
+      hline(PS_RAW_P75,  'rgba(0,229,255,0.55)',  [3,3], 'P75'),
+      hline(PS_RAW_P25,  'rgba(255,68,68,0.55)',  [3,3], 'P25')
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {
+        legend:{display:true, position:'bottom', labels:{
+          color:C.tick, font:{family:F,size:11,weight:'500'},
+          boxWidth:22, padding:10,
+          filter:function(item){ var t=item.text; return t!=='_ref'&&t!=='MEDIAN'&&t!=='MEAN'&&t!=='P75'&&t!=='P25'; }
+        }},
+        tooltip:{...TT(), callbacks:{
+          label:function(ctx){
+            var lbl = ctx.dataset.label||'';
+            if (lbl === '_ref') return null;
+            if (['MEDIAN','MEAN','P75','P25'].includes(lbl)) return null;
+            return lbl+': '+ctx.parsed.y;
+          }
+        }}
+      },
+      scales: {
+        x:{type:'category', grid:{color:C.grid}, ticks:{...TK(), maxTicksLimit:8, maxRotation:0}},
+        y:{grid:{color:C.grid, borderDash:[2,4]}, ticks:TK()}
+      }
+    }
+  }));
+})();
+
+// ── P/S 3D ───────────────────────────────────────────────────────
+(function() {
+  window._SYNC_CHARTS.push(new Chart(document.getElementById('cPs3'), {
+    type: 'line',
+    data: { labels: DATES, datasets: [
+      {label:'P/S 3D AVG', data:PS_MA3, borderColor:'#00ff88', borderWidth:1.5,
+       fill:false, pointRadius:0, tension:0.2},
+      hline(PS_MA3_MED,  'rgba(255,183,0,0.7)',  [],    'MEDIAN'),
+      hline(PS_MA3_MEAN, 'rgba(255,200,0,0.5)',  [6,4], 'MEAN'),
+      hline(PS_MA3_P75,  'rgba(0,229,255,0.55)',  [3,3], 'P75'),
+      hline(PS_MA3_P25,  'rgba(255,68,68,0.55)',  [3,3], 'P25')
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {
+        legend:{display:true, position:'bottom', labels:{
+          color:C.tick, font:{family:F,size:11,weight:'500'},
+          boxWidth:22, padding:10,
+          filter:function(item){ var t=item.text; return t!=='_ref'&&t!=='MEDIAN'&&t!=='MEAN'&&t!=='P75'&&t!=='P25'; }
+        }},
+        tooltip:{...TT(), callbacks:{
+          label:function(ctx){
+            var lbl = ctx.dataset.label||'';
+            if (lbl === '_ref') return null;
+            if (['MEDIAN','MEAN','P75','P25'].includes(lbl)) return null;
+            return lbl+': '+ctx.parsed.y;
+          }
+        }}
+      },
+      scales: {
+        x:{type:'category', grid:{color:C.grid}, ticks:{...TK(), maxTicksLimit:8, maxRotation:0}},
+        y:{grid:{color:C.grid, borderDash:[2,4]}, ticks:TK()}
+      }
+    }
+  }));
+})();
+
+// ── P/S 10D ──────────────────────────────────────────────────────
+(function() {
+  window._SYNC_CHARTS.push(new Chart(document.getElementById('cPs10'), {
+    type: 'line',
+    data: { labels: DATES, datasets: [
+      {label:'P/S 10D AVG', data:PS_MA10, borderColor:'#cc88ff', borderWidth:1.5,
+       fill:false, pointRadius:0, tension:0.2},
+      hline(PS10_MED,  'rgba(255,183,0,0.7)',  [],    'MEDIAN'),
+      hline(PS10_MEAN, 'rgba(255,200,0,0.5)',  [6,4], 'MEAN'),
+      hline(PS10_P75,  'rgba(0,229,255,0.55)',  [3,3], 'P75'),
+      hline(PS10_P25,  'rgba(255,68,68,0.55)',  [3,3], 'P25')
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {
+        legend:{display:true, position:'bottom', labels:{
+          color:C.tick, font:{family:F,size:11,weight:'500'},
+          boxWidth:22, padding:10,
+          filter:function(item){ var t=item.text; return t!=='_ref'&&t!=='MEDIAN'&&t!=='MEAN'&&t!=='P75'&&t!=='P25'; }
+        }},
+        tooltip:{...TT(), callbacks:{
+          label:function(ctx){
+            var lbl = ctx.dataset.label||'';
+            if (lbl === '_ref') return null;
+            if (['MEDIAN','MEAN','P75','P25'].includes(lbl)) return null;
+            return lbl+': '+ctx.parsed.y;
+          }
+        }}
+      },
+      scales: {
+        x:{type:'category', grid:{color:C.grid}, ticks:{...TK(), maxTicksLimit:8, maxRotation:0}},
+        y:{grid:{color:C.grid, borderDash:[2,4]}, ticks:TK()}
+      }
+    }
+  }));
+})();
+
+// ── SCORE ────────────────────────────────────────────────────────
+(function() {
+  window._SYNC_CHARTS.push(new Chart(document.getElementById('cScore'), {
+    type: 'bar',
+    data: { labels: DATES, datasets: [
+      {label:'INSIDER SCORE', data:SCORE, backgroundColor:SCORE_COLORS,
+       borderWidth:0, barPercentage:0.95}
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {legend:{display:false}, tooltip:TT()},
+      scales: {
+        x:{type:'category', grid:{color:C.grid}, ticks:{...TK(), maxTicksLimit:10, maxRotation:0}},
+        y:{grid:{color:C.grid, borderDash:[2,4]}, ticks:TK(), min:-4, max:4}
+      }
+    }
+  }));
+})();
+
+_initSync();
+_initBrush();
+
+</script>
+</body></html>
